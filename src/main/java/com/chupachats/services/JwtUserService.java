@@ -8,7 +8,5 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtUserService {
-
     private final UserService userService;
-
 }
