@@ -1,6 +1,7 @@
 package com.chupachats.controllers;
 
 import com.chupachats.exception.UserNullFoundException;
+import com.chupachats.models.User;
 import com.chupachats.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
