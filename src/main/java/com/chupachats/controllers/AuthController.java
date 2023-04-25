@@ -9,29 +9,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+//@CrossOrigin("${jivys.hosting}")
 public class AuthController {
 
     private final UserService userService;
 
-
-    @GetMapping("/home")
-    public ResponseEntity home(){
-        return ResponseEntity.badRequest().body("HOME PAGE!");
-    }
-
-    @GetMapping("/registration")
+    @PostMapping("/registration")
     public ResponseEntity registration(@RequestBody User user) {
         try {
-            AuthUserResponceDto responce = userService.createUser(user);
-            return ResponseEntity.ok().body("Пользователь с email'ом " + responce.getEmail() +
-                    " успешно зарегистрирован!\n" + responce.getToken());
+            return ResponseEntity.ok().body(userService.createUser(user));
 
         }catch (AuthenticationException e){
             return ResponseEntity.badRequest().body("Invalid email or password");
@@ -42,7 +33,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/login")
+    @PostMapping ("/login")
     public ResponseEntity login(@RequestBody AuthUserDto authUserDto){
         try {
             return ResponseEntity.ok(userService.login(authUserDto));

@@ -4,19 +4,43 @@ import com.chupachats.exception.UserNullFoundException;
 import com.chupachats.models.User;
 import com.chupachats.services.UserService;
 import lombok.RequiredArgsConstructor;
+import netscape.javascript.JSObject;
+import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity all() {
+        try{
+            return ResponseEntity.ok(userService.all());
+        }catch (UserNullFoundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка!");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getUserById(@PathVariable Long id) {
+        try{
+            return ResponseEntity.ok(userService.findUserById(id));
+        }catch (UserNullFoundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка!");
+        }
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteUserById(@PathVariable Long id){
         try{
@@ -46,28 +70,6 @@ public class UserController {
         try{
             userService.addImage(file, id);
             return ResponseEntity.ok("файл добавлен");
-        }catch (UserNullFoundException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка!");
-        }
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity all() {
-        try{
-            return ResponseEntity.ok(userService.all());
-        }catch (UserNullFoundException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка!");
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity getUserById(@PathVariable Long id) {
-        try{
-            return ResponseEntity.ok(userService.findUserById(id));
         }catch (UserNullFoundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e) {
